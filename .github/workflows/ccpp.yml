@@ -44,5 +44,5 @@ jobs:
       with:
         name: ${{ github.event.repository.name }}.${{ github.sha }}
         path: |
-          bin/bbctube.ssd
+          comal65/bin/bbctube.ssd
 
