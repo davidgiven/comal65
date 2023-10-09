@@ -1768,8 +1768,7 @@ zproc exec_one
     jsr push_i0
 
 set_i0_to_one:
-    lda #0
-    jsr set_i0_to_4x_constant
+    jsr set_i0_to_zero
     inc i0+0
     rts
 zendproc
