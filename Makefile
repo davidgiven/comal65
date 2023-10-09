@@ -1,5 +1,4 @@
-CA65 = ca65
-LD65 = ld65
+LLVM ?= /opt/bin/
 CC = cc
 
 OBJDIR = .obj
@@ -16,13 +15,17 @@ $(OBJDIR)/%: tools/%.c
 	@mkdir -p $(dir $@)
 	$(CC) -o $@ $<
 
-$(OBJDIR)/%.bin: $(OBJDIR)/src/%.o src/%.cfg
+$(OBJDIR)/%.bin: $(OBJDIR)/src/%.o src/%.ld
 	@mkdir -p $(dir $@)
-	$(LD65) --config src/$*.cfg -o $@ $(OBJDIR)/src/$*.o
+	$(LD65)ld.lld \
+		-Map $(OBJDIR)/$*.map \
+		-T src/$*.ld \
+		-o $@ \
+		$<
 
 $(OBJDIR)/%.o: %.S
 	@mkdir -p $(dir $@)
-	$(CA65) -o $@ $<
+	$(LLVM)mos-cpm65-clang -g -c -o $@ $<
 
 clean:
 	rm -rf $(OBJDIR) bin
