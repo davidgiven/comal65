@@ -12,16 +12,20 @@ FILES = \
 
 all: bin/bbctube.ssd
 
-bin/bbctube.ssd: $(OBJDIR)/bbctube.bin $(OBJDIR)/mkdfs
+bin/bbctube.ssd: $(OBJDIR)/bbctube.bin $(OBJDIR)/tools/mkdfs
 	@mkdir -p $(dir $@)
-	$(OBJDIR)/mkdfs -O $@ \
+	$(OBJDIR)/tools/mkdfs -O $@ \
 		-N Comal-65 \
 		-f $(OBJDIR)/bbctube.bin -n \!boot -l 0x400 -e 0x400 -B 2 \
 		$(patsubst %, -f %, $(FILES))
 
-$(OBJDIR)/%: tools/%.c
+$(OBJDIR)/%.o: %.c
 	@mkdir -p $(dir $@)
-	$(CC) -o $@ $<
+	$(CC) -c -o $@ $< -I.
+
+$(OBJDIR)/%: $(OBJDIR)/%.o
+	@mkdir -p $(dir $@)
+	$(CC) -o $@ $^
 
 $(OBJDIR)/%.bin: $(OBJDIR)/src/%.o $(COMMON) src/%.ld 
 	@mkdir -p $(dir $@)
@@ -36,6 +40,8 @@ $(OBJDIR)/%.o: %.s
 	$(LLVM)mos-cpm65-clang -g $(CLANGFLAGS) -c -o $@ $<
 
 $(OBJDIR)/src/bbctube.o: CLANGFLAGS += -mcpu=mos65c02
+
+$(OBJDIR)/tools/tubeemu/bbctube: $(OBJDIR)/third_party/lib6502/lib6502.o
 
 clean:
 	rm -rf $(OBJDIR) bin
