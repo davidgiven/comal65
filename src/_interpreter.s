@@ -529,9 +529,9 @@ zproc mainloop
     lda listerflags
     and #LISTERFLAG_STARTUP
     zif_ne
-        jsr platform_startup_hook
         lda #0
         sta listerflags
+        jsr platform_startup_hook
     zendif
 
     zloop
@@ -656,6 +656,26 @@ zproc clear
     sta v1
     sta v2
 
+    ; Clear object table.
+
+    jsr find_first_object
+    zrepeat
+        lda #0
+        tay
+        sta (p0), y
+        iny
+        sta (p0), y
+
+        jsr find_next_object
+    zuntil_cs
+
+    ; Clear global variables.
+
+    lda #<global_variables
+    sta p0+0
+    lda #>global_variables
+    sta p0+1
+    jsr hash_init
     rts
 zendproc
 
