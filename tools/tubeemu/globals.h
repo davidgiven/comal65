@@ -26,15 +26,16 @@ extern void showregs(void);
 
 extern void mos_boot(void);
 
+extern void osargs();
+extern void osasci();
 extern void osbget();
 extern void osbput();
-extern void osargs();
-extern void osfile();
-extern void osword();
 extern void osbyte();
-extern void oswrch();
+extern void osfile();
+extern void osfind();
 extern void osnewl();
-extern void osasci();
+extern void osword();
+extern void oswrch();
 
 extern void fatal(const char* message, ...);
 

@@ -446,6 +446,10 @@ void emulator_run(void)
                     oswrch();
                     break;
 
+                case 0xffce:
+                    osfind();
+                    break;
+
                 case EXIT_ADDRESS:
                     exit(0);
 

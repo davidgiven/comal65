@@ -14,7 +14,7 @@ COMMON = \
 FILES = \
 	examples/hilo.cml
 
-all: bin/tubeemu bin/bbctube.ssd
+all: tests bin/tubeemu bin/bbctube.ssd
 
 bin/tubeemu: $(OBJDIR)/tools/tubeemu/tubeemu
 	@mkdir -p $(dir $@)

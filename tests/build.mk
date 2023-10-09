@@ -10,5 +10,5 @@ $(OBJDIR)/tests/%.stamp: tests/%.good $(OBJDIR)/tests/%.log
 
 $(OBJDIR)/tests/%.log: tests/%.cml $(OBJDIR)/bbctube.bin bin/tubeemu
 	@mkdir -p $(dir $@)
-	timeout 4s bin/tubeemu -f $(OBJDIR)/bbctube.bin $(notdir $<) > $@
+	timeout 4s bin/tubeemu $(OBJDIR)/bbctube.bin $< > $@
 

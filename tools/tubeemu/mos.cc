@@ -48,6 +48,19 @@ static uint16_t read32(uint16_t address)
     return read16(address + 0) | (read16(address + 2) << 16);
 }
 
+static std::string readstring(uint16_t address)
+{
+    std::string s;
+    for (;;)
+    {
+        uint8_t c = ram[address++];
+        if (c < 32)
+            break;
+        s += (char)c;
+    }
+    return s;
+}
+
 static void load_binary(std::string filename)
 {
     /* Load the binary. */
@@ -193,12 +206,6 @@ void osargs(void)
     }
 }
 
-void osbget(void)
-{
-    printf("unknown OSBGET\n");
-    exit(1);
-}
-
 void osfile(void)
 {
     uint16_t block =
@@ -229,6 +236,9 @@ void osbyte(void)
             cpu->registers->x = 0;
             cpu->registers->y = 0x80;
             break;
+
+        case 0x8e: /* select ROM */
+            exit(0);
 
         default:
             printf("unknown OSBYTE: a=0x%02x x=0x%02x y=0x%02x\n",
@@ -309,6 +319,56 @@ void osword(void)
                 cpu->registers->y);
             exit(1);
     }
+}
+
+void osfind(void)
+{
+    int op = cpu->registers->a >> 4;
+
+    if (op == 0)
+    {
+        /* Close. */
+        close(cpu->registers->y);
+        return;
+    }
+
+    uint16_t address = cpu->registers->x | (cpu->registers->y << 8);
+    std::string filename = readstring(address);
+
+    switch (op)
+    {
+        case 0x4: /* openin */
+            cpu->registers->a = open(filename.c_str(), O_RDONLY);
+            break;
+
+        case 0x8: /* openout */
+            cpu->registers->a = open(filename.c_str(), O_WRONLY);
+            break;
+
+        case 0xc: /* openup */
+            cpu->registers->a = open(filename.c_str(), O_RDWR);
+            break;
+
+        default:
+            printf("unknown OSFIND: a=0x%02x x=0x%02x y=0x%02x\n",
+                cpu->registers->a,
+                cpu->registers->x,
+                cpu->registers->y);
+            exit(1);
+    }
+
+    if (cpu->registers->a == 0xff)
+        cpu->registers->a = 0;
+}
+
+void osbget(void)
+{
+    int i = read(cpu->registers->y, &cpu->registers->a, 1);
+
+    if (i == 1)
+        cpu->registers->p &= ~0x01;
+    else
+        cpu->registers->p |= 0x01;
 }
 
 void oswrch(void)
