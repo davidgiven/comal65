@@ -4,6 +4,12 @@ MEMORY {
 }
 
 SECTIONS {
+    OSWORD = 0xfff1;
+    OSBYTE = 0xfff4;
+    OSWRCH = 0xffee;
+
+    platform_putchar = OSWRCH;
+ 
 	.zp : {
 		*(.zp .zp.*)
 	} >zp
