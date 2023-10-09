@@ -33,8 +33,8 @@ jobs:
       name: install llvm-mos
       run: |
         mkdir -p llvm-mos-sdk/build
-        (cd llvm-mos-sdk/build && cmake -G "Ninja" -DCMAKE_INSTALL_PREFIX=$HOME/llvm-mos ..)
-        (cd llvm-mos-sdk/build && ninja install)
+        (cd llvm-mos-sdk/build && cmake -G "Make" -DCMAKE_INSTALL_PREFIX=$HOME/llvm-mos ..)
+        (cd llvm-mos-sdk/build && make install)
 
     - name: make
       run: PATH=$PATH:$HOME/llvm-mos/bin make -C comal65 LLVM=
