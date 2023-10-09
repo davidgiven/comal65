@@ -176,6 +176,8 @@ p2:        .word 0
 p3:        .word 0
 p4:        .word 0
 
+.global v0, v1, v2
+.global i0, i1, i2
 v0:        .byte 0
 i0:        .word 0, 0 ; also, TOS when executing
 
@@ -185,6 +187,7 @@ i1:        .word 0, 0
 v2:        .byte 0
 i2:        .word 0, 0
 
+.global bufferpos, bufferend
 bufferpos: .byte 0 ; current beginning of token in input buffer
 bufferend: .byte 0 ; current end of token in input buffer
 
@@ -234,6 +237,7 @@ check_end:
 LISTERFLAG_NOTSTART   = 1<<7 ; set after every lister is called, is !RESETSTART
 LISTERFLAG_COMMA      = 1<<6 ; a comma is intended before the next clause
 LISTERFLAG_RESETSTART = 1<<5 ; causes NOTSTART to be reset
+LISTERFLAG_STARTUP    = 1<<0 ; not lister related; stores startup flag
 
 TOKEN_EOL        = 0x00 ; end of line
 TOKEN_VARREFRW   = 0x01 ; +2 bytes for the ID
@@ -487,6 +491,8 @@ OBJECT_TABLE_SIZE = 256
 
 zproc start_interpreter
     jsr clear
+    lda #LISTERFLAG_STARTUP
+    sta listerflags
 zendproc
     ; fall through
 zproc error_return
@@ -519,6 +525,14 @@ zendproc
 zproc mainloop
     ldx #0xff
     txs
+
+    lda listerflags
+    and #LISTERFLAG_STARTUP
+    zif_ne
+        jsr platform_startup_hook
+        lda #0
+        sta listerflags
+    zendif
 
     zloop
         lda enterfd

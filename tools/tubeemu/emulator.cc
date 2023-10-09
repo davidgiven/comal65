@@ -455,6 +455,7 @@ void emulator_run(void)
             }
         
             rts();
+            continue;
         }
 
         if (ram[pc] == 0)

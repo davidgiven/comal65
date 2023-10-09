@@ -130,5 +130,49 @@ zproc platform_close
     jmp OSFIND
 zendproc
 
+zproc platform_startup_hook
+    ldx #p0
+    lda #1 ; get command line pointer
+    jsr OSARGS
+
+    ; Read the command line into the text buffer.
+
+    jsr reset_buffer
+    zloop
+        ldx #<p0
+        ldy #>p0
+        lda #5
+        jsr OSWORD
+        lda p0+4
+
+        cmp #0x0d
+        zbreakif_eq
+
+        ldx p2+1
+        jsr buffer_print_char
+
+        inc p0+0
+        zif_eq
+            inc p0+1
+            zif_eq
+                inc p0+2
+                zif_eq
+                    inc p0+3
+                zendif
+            zendif
+        zendif
+    zendloop
+
+    ; If it's not empty, fake an ENTER.
+
+    lda bufferend
+    zif_ne
+        ldx #v0
+        jsr create_string
+        jsr exec_enter
+    zendif
+    rts
+zendproc
+
 .data
 

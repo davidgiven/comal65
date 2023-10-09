@@ -4,13 +4,15 @@ MEMORY {
 }
 
 SECTIONS {
-    OSBYTE = 0xfff4;
-    OSFIND = 0xffce;
-    OSWORD = 0xfff1;
-    OSWRCH = 0xffee;
+    OSARGS = 0xffda;
+    OSASCI = 0xffe3;
     OSBGET = 0xffd7;
     OSBPUT = 0xffd4;
+    OSBYTE = 0xfff4;
+    OSFIND = 0xffce;
     OSNEWL = 0xffe7;
+    OSWORD = 0xfff1;
+    OSWRCH = 0xffee;
 
     BRKV = 0x202;
 

@@ -41,7 +41,7 @@ static void parse_options(int argc, char* const* argv)
 {
     for (;;)
     {
-        switch (getopt(argc, argv, "hdp:m:"))
+        switch (getopt(argc, argv, "hdl:e:"))
         {
             case -1:
                 goto end_of_flags;

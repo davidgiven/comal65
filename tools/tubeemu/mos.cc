@@ -14,6 +14,8 @@
 #include <gelf.h>
 #include "globals.h"
 
+static std::string commandline;
+
 static void write8(uint16_t address, uint8_t b)
 {
     ram[address] = b;
@@ -138,29 +140,28 @@ void mos_boot(void)
 
         uint8_t* p = &ram[0x0300];
 
-        int offset = 0;
         for (int word = 1; user_command_line[word]; word++)
         {
-            *p++ = ' ';
+            if (word > 1)
+                commandline += ' ';
 
             const char* pin = user_command_line[word];
             while (*pin)
             {
-                if (offset > 125)
+                if (commandline.size() > 253)
                     fatal("user command line too long");
-                *p++ = *pin++;
+                commandline += *pin++;
             }
         }
-        *p++ = 0x0d;
 
         cpu->registers->pc = exec_address;
     }
     else
         fatal("no user command provided");
 
-	ram[0x01fe] = (EXIT_ADDRESS-1) & 0xff; // lo
-	ram[0x01ff] = (EXIT_ADDRESS-1) >> 8; // hi
-	cpu->registers->s = 0xfd;
+    ram[0x01fe] = (EXIT_ADDRESS - 1) & 0xff; // lo
+    ram[0x01ff] = (EXIT_ADDRESS - 1) >> 8;   // hi
+    cpu->registers->s = 0xfd;
 }
 
 void osargs(void)
@@ -173,7 +174,7 @@ void osargs(void)
         switch (cpu->registers->a)
         {
             case 0x01: /* get address of command line */
-                write32(block, 0x2ff);
+                write32(block, 0x300);
                 break;
 
             default:
@@ -286,7 +287,16 @@ void osword(void)
                     ram[block + 4] = '\r';
                     break; /* command line */
                 default:
-                    ram[block + 4] = 0x00;
+                    if ((ioaddr >= 0x300) && (ioaddr <= 0x3ff))
+                    {
+                        int offset = ioaddr - 0x300;
+                        if (offset < commandline.size())
+                            ram[block + 4] = commandline[offset];
+                        else
+                            ram[block + 4] = 0x0d;
+                    }
+                    else
+                        ram[block + 4] = 0x00;
                     break;
             }
             break;
