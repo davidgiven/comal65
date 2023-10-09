@@ -4,11 +4,19 @@ MEMORY {
 }
 
 SECTIONS {
-    OSWORD = 0xfff1;
     OSBYTE = 0xfff4;
+    OSFIND = 0xffce;
+    OSWORD = 0xfff1;
     OSWRCH = 0xffee;
+    OSBGET = 0xffd7;
+    OSBPUT = 0xffd4;
+    OSNEWL = 0xffe7;
+
+    BRKV = 0x202;
 
     platform_putchar = OSWRCH;
+    platform_bget = OSBGET;
+    platform_bput = OSBPUT;
  
 	.zp : {
 		*(.zp .zp.*)

@@ -161,14 +161,15 @@ LINE_DATA       = 4
 
 .section .zp, "zax", @nobits
 
-enteroffset:  .byte 0
-listeroffset: .byte 0
+enterfd:  .byte 0
+listerfd: .byte 0
 
 heapptr:   .word 0
 stackptr:  .word 0
 progbase:  .word 0
 progtop:   .word 0
 
+.global p0, p1, p2, p3, p4
 p0:        .word 0
 p1:        .word 0
 p2:        .word 0
@@ -486,34 +487,27 @@ OBJECT_TABLE_SIZE = 256
 
 zproc start_interpreter
     jsr clear
-;    lda cpm_fcb + FCB_F1
-;    cmp #' '
-;    zif_ne
-;        ; The user specified a filename on the command line. Do a ENTER for it.
-;        
-;        lda #<cpm_fcb
-;        ldx #>cpm_fcb
-;        ldy #BDOS_OPEN_FILE
-;        jsr BDOS
-;        zif_cs
-;            lda #<file_not_found_msg
-;            ldx #>file_not_found_msg
-;            jsr print_string
-;            jmp print_nl
-;        zendif
-;
-;        ; Configure to read characters from the file rather than from the console.
-;
-;        lda #0
-;        sta enteroffset
-;        jmp destroy_stack
-;    zendif
-error_return:
+zendproc
+    ; fall through
+zproc error_return
     ; Read characters from the console.
 
-    lda #0xff
-    sta enteroffset
-destroy_stack:
+    ldy enterfd
+    zif_ne
+        jsr platform_close
+        ldy #0
+        sta enterfd
+    zendif
+    
+    ldy listerfd
+    zif_ne
+        jsr platform_close
+        ldy #0
+        sta listerfd
+    zendif
+zendproc
+    ; fall through
+zproc destroy_stack
     copy16 progbase, stackptr
 
     lda #0
@@ -527,8 +521,7 @@ zproc mainloop
     txs
 
     zloop
-        lda enteroffset
-        cmp #0xff
+        lda enterfd
         zif_eq
             ; Read a line from the console.
 
@@ -545,9 +538,16 @@ zproc mainloop
             inc bufferend
             inc bufferend
             zloop
-                jsr read_character_from_enter_file
-                cmp #0x1a ; ^Z
-                zbreakif_eq
+                ldy enterfd
+                jsr platform_bget
+                zif_cs
+                    ldy enterfd
+                    jsr platform_close
+                    lda #0
+                    sta enterfd
+                    zbreak
+                zendif
+                
                 cmp #0x0a ; LF
                 zbreakif_eq
                 cmp #0x0d ; CR
@@ -625,6 +625,8 @@ zproc clear
     sta progbase+1
 
     lda #0
+    sta listerfd
+    sta enterfd
     tay
     sta (progbase), y
 
@@ -2650,85 +2652,26 @@ zendproc
 ; --- File handline ---------------------------------------------------------
 
 zproc exec_enter
-;    jsr deref_i0
-;    ldx #v0
-;    jsr check_for_string
-;
-;    ; Open file.
-;
-;    lda #<cpm_fcb
-;    ldx #>cpm_fcb
-;    ldy #BDOS_SET_DMA_ADDRESS
-;    jsr BDOS
-;
-;    jsr reset_buffer
-;    ldx #v0
-;    jsr buffer_print_stringvalue
-;
-;    ldx bufferend
-;    lda #0
-;    sta text_buffer, x
-;
-;    lda #<text_buffer
-;    ldx #>text_buffer
-;    ldy #BDOS_PARSEFILENAME
-;    jsr BDOS
-;    
-;    lda #<cpm_fcb
-;    ldx #>cpm_fcb
-;    ldy #BDOS_OPEN_FILE
-;    jsr BDOS
-;    zif_cs
-;        jmp error_file_not_found
-;    zendif
-;
-;    ; Configure to read characters from the file rather than from the console.
-;
-;    lda #0
-;    sta enteroffset
-    rts
-zendproc
+    jsr deref_i0
+    ldx #v0
+    jsr check_for_string
 
-zproc read_character_from_enter_file
-;    lda enteroffset
-;    zif_eq
-;        ; Read next sector from the file.
-;
-;        lda #<cpm_default_dma
-;        ldx #>cpm_default_dma
-;        ldy #BDOS_SET_DMA_ADDRESS
-;        jsr BDOS
-;
-;        lda #<cpm_fcb
-;        ldx #>cpm_fcb
-;        ldy #BDOS_READ_SEQUENTIAL
-;        jsr BDOS
-;        bcs 1f
-;    zendif
-;
-;    ldx enteroffset
-;    lda cpm_default_dma, x
-;    cmp #0x1a
-;    beq 1f
-;    inx
-;    cpx #0x80
-;    zif_eq
-;        ldx #0
-;    zendif
-;    stx enteroffset
-;    rts
-;
-;1:
-;    ; EOF. Go back to reading from the console.
-;
-;    lda #<cpm_fcb
-;    ldx #>cpm_fcb
-;    ldy #BDOS_CLOSE_FILE
-;    jsr BDOS
-;
-;    lda #0xff
-;    sta enteroffset
-;    lda #0x1a ; ^Z
+    ; Open file.
+
+    jsr reset_buffer
+    ldx #v0
+    jsr buffer_print_stringvalue
+    lda #0
+    jsr buffer_print_char
+
+    lda #<text_buffer
+    ldx #>text_buffer
+    jsr platform_openin
+    zif_cs
+        jmp error_file_not_found
+    zendif
+
+    sta enterfd
     rts
 zendproc
 
@@ -2942,122 +2885,56 @@ zproc exec_list
 zendproc
 
 zproc exec_list_to_f
-;    jsr deref_i0
-;    ldx #v0
-;    jsr check_for_string
-;
-;    jsr reset_buffer
-;    ldx #v0
-;    jsr buffer_print_stringvalue
-;    lda #0
-;    jsr buffer_print_char
-;
-;    lda #<cpm_fcb
-;    ldx #>cpm_fcb
-;    ldy #BDOS_SET_DMA_ADDRESS
-;    jsr BDOS
-;
-;    lda #<text_buffer
-;    ldx #>text_buffer
-;    ldy #BDOS_PARSEFILENAME
-;    jsr BDOS
-;    
-;    lda #<cpm_fcb
-;    ldx #>cpm_fcb
-;    ldy #BDOS_DELETE_FILE
-;    jsr BDOS
-;
-;    lda #<cpm_fcb
-;    ldx #>cpm_fcb
-;    ldy #BDOS_CREATE_FILE
-;    jsr BDOS
-;    zif_cs
-;        jmp error_file_not_found
-;    zendif
-;
-;    lda #0
-;    sta listeroffset
-;
-;    lda #<cpm_default_dma
-;    ldx #>cpm_default_dma
-;    ldy #BDOS_SET_DMA_ADDRESS
-;    jsr BDOS
-;
-;    jsr goto_first_line
-;    jmp 1f
-;    zrepeat
-;        jsr list_line
-;        jsr buffer_print_nl
-;
-;        zloop
-;            ldx bufferpos
-;            cpx bufferend
-;            zbreakif_eq
-;
-;            lda text_buffer, x
-;            jsr write_char
-;
-;            inc bufferpos
-;        zendloop
-;
-;        jsr goto_next_line
-;
-;        ; Check for end of program.
-;
-;    1:
-;        ldy #LINE_SIZE
-;        lda (execlineptr), y
-;    zuntil_eq
-;    
-;    ; Write the end of file character.
-;
-;    lda #0x1a ; ^Z
-;    jsr write_char
-;
-;    ; Flush the buffer and close the file.
-;
-;    lda listeroffset
-;    zif_ne
-;        zrepeat
-;            lda #0x1a ; ^Z
-;            jsr write_char
-;            lda listeroffset
-;        zuntil_eq
-;    zendif
-;
-;    lda #<cpm_fcb
-;    ldx #>cpm_fcb
-;    ldy #BDOS_CLOSE_FILE
-;    jsr BDOS
-;    zif_cs
-;        jmp error_file_not_found
-;    zendif
-;
-;    ; Don't continue execution.
-;
-;    jmp mainloop
-;
-;write_char:
-;    ldy listeroffset
-;    sta cpm_default_dma, y
-;    iny
-;    cpy #0x80
-;    zif_eq
-;        jsr write_record
-;        ldy #0
-;    zendif
-;    sty listeroffset
-;    rts
-;
-;write_record:
-;    lda #<cpm_fcb
-;    ldx #>cpm_fcb
-;    ldy #BDOS_WRITE_SEQUENTIAL
-;    jsr BDOS
-;    zif_cs
-;        jmp error_file_not_found
-;    zendif
-    rts
+    jsr deref_i0
+    ldx #v0
+    jsr check_for_string
+
+    jsr reset_buffer
+    ldx #v0
+    jsr buffer_print_stringvalue
+    lda #0
+    jsr buffer_print_char
+
+    lda #<text_buffer
+    ldx #>text_buffer
+    jsr platform_openout
+    sta listerfd
+
+    jsr goto_first_line
+    jmp 1f
+    zrepeat
+        jsr list_line
+        jsr buffer_print_nl
+
+        zloop
+            ldx bufferpos
+            cpx bufferend
+            zbreakif_eq
+
+            lda text_buffer, x
+            ldy listerfd
+            jsr platform_bput
+
+            inc bufferpos
+        zendloop
+
+        jsr goto_next_line
+
+        ; Check for end of program.
+
+    1:
+        ldy #LINE_SIZE
+        lda (execlineptr), y
+    zuntil_eq
+
+    ldy listerfd
+    jsr platform_close
+    ldy #0
+    sta listerfd
+
+    ; Don't continue execution.
+
+    jmp mainloop
 zendproc
 
 zproc exec_del

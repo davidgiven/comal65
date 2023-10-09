@@ -1,0 +1,18 @@
+9repeat
+10target=rnd(100)
+15tries=0
+20print "Guess my number!"
+30repeat
+35  tries = tries + 1
+40  input "What is your guess? ": guess
+50  if guess < target then
+60    print "Too low!"
+70  elif guess > target then
+80    print "Too high!"
+90  endif
+100until guess = target
+120print "You got it in ", tries, " go",
+130if tries <> 1 then print "es",
+140print "!"
+150input "Another go? (y/n): ": yn$
+160until yn$ <> "y"
