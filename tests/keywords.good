@@ -1,0 +1,64 @@
+9 END
+10 STOP
+20 BYE
+40 REPEAT
+50 UNTIL FALSE
+60 WHILE TRUE DO 
+70 ENDWHILE
+75 WHILE TRUE DO PRINT
+80 FOR i := 1 TO 10 DO PRINT
+90 FOR i := 1 TO 10 DO PRINT
+100 ENDFOR
+110 ENDFOR
+120 IF TRUE THEN 
+130 ELSE
+140 ENDIF
+150 ELIF TRUE THEN 
+160 IF TRUE THEN PRINT
+170 a := 1
+180 a := 1
+190 a := 1; b := 2; c := 3
+200 PRINT
+210 PRINT 1
+220 PRINT 1, 2, 3
+230 PRINT 1, 2, 3,
+240 PRINT 1, 2, 3,
+250 a$ := a$(1 : 3)
+260 a$ := a$(1)
+270 a := a + b - c * d / e MOD f
+280 a := a = b <> c <= d < e >= f > g
+290 PRINT a + b
+291 PRINT -a
+300 PRINT NOT a
+310 PRINT SGN(a)
+320 PRINT LEN(a)
+330 PRINT STR$(a)
+331 PRINT RND()
+332 PRINT RND(a)
+333 PRINT RND(a, b)
+340 PRINT FREE
+350 PRINT TRUE
+360 PRINT FALSE
+370 PRINT 9999
+375 PRINT -9999
+380 PRINT -9999
+390 PRINT "literal"
+410 PROC noparameters2()
+420 PROC oneparameter(a)
+430 PROC twoparameter(a, b)
+431 PROC refparameter(a, REF b, c)
+432 PROC stringparameter(a$, REF b$)
+433 PROC closedproc() CLOSED
+450 noparameters()
+460 oneparameter(1)
+470 twoparameter(1, 2)
+480 ENDPROC
+490 RETURN
+510 FUNC refparameter(a, REF b, c)
+520 FUNC stringparameter(a$, REF b$)
+521 FUNC closedfunc() CLOSED
+530 a := noparameters()
+540 a := refparameter(a, b, c)
+550 a$ := stringparameter(a$, b$)
+560 ENDFUNC
+570 RETURN 1234

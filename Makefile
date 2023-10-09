@@ -10,7 +10,11 @@ COMMON = \
 FILES = \
 	examples/hilo.cml
 
-all: bin/bbctube.ssd
+all: bin/tubeemu bin/bbctube.ssd
+
+bin/tubeemu: $(OBJDIR)/tools/tubeemu/bbctube
+	@mkdir -p $(dir $@)
+	cp $< $@
 
 bin/bbctube.ssd: $(OBJDIR)/bbctube.bin $(OBJDIR)/tools/mkdfs
 	@mkdir -p $(dir $@)
@@ -42,6 +46,8 @@ $(OBJDIR)/%.o: %.s
 $(OBJDIR)/src/bbctube.o: CLANGFLAGS += -mcpu=mos65c02
 
 $(OBJDIR)/tools/tubeemu/bbctube: $(OBJDIR)/third_party/lib6502/lib6502.o
+
+include tests/build.mk
 
 clean:
 	rm -rf $(OBJDIR) bin

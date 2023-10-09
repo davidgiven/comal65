@@ -1,0 +1,14 @@
+123
+123123
+abc123
+abc123abc123
+abc123zzz
+10 a$ := "123"
+20 PRINT a$
+30 PRINT a$ + a$
+40 a$ := "abc" + a$
+50 PRINT a$
+60 b$ := a$
+70 PRINT a$, b$
+80 b$ := "zzz"
+90 PRINT a$, b$

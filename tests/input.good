@@ -1,0 +1,4 @@
+10 INPUT a
+20 INPUT "prompt! ": a
+30 INPUT a,
+40 INPUT "prompt! ": a,

@@ -1,0 +1,84 @@
+checkpoint 1; a=1
+This is test!
+Now, a=2
+checkpoint 2; a=1
+Before return
+checkpoint 3; a=1
+a=10 b=20 c=30
+checkpoint 4; a=1
+a=1 b=1 c=1
+checkpoint 5; a=1
+a$=Hello, world!
+checkpoint 6; a=1
+count=1
+count=2
+count=3
+count=4
+count=5
+count=6
+count=7
+count=8
+count=9
+count=10
+checkpoint 7; a=1
+1 var=1 value=99
+2 var=99 value=99
+checkpoint 7; a=99
+1.1 var=99 value=199
+1 var=99 value=199
+2 var=199 value=199
+2.1 var=199 value=199
+checkpoint 8; a=199
+5 a := 1
+10 PRINT "checkpoint 1; a=", a
+20 simpletest()
+30 PRINT "checkpoint 2; a=", a
+40 returntest()
+50 PRINT "checkpoint 3; a=", a
+60 biggertest(10, 20, 30)
+70 PRINT "checkpoint 4; a=", a
+80 biggertest(a, a, a)
+90 PRINT "checkpoint 5; a=", a
+100 stringtest("Hello, world!")
+110 PRINT "checkpoint 6; a=", a
+120 recurse(1, 10)
+130 PRINT "checkpoint 7; a=", a
+140 setvalue(a, 99)
+150 PRINT "checkpoint 7; a=", a
+160 setvalue2(a, 199)
+170 PRINT "checkpoint 8; a=", a
+180 END
+200 PROC simpletest() CLOSED
+210   PRINT "This is test!"
+220   a := 2
+230   PRINT "Now, a=", a
+240 ENDPROC
+250 PROC returntest() CLOSED
+260   PRINT "Before return"
+270   FOR a := 5 TO 10 DO RETURN
+280   PRINT "After return"
+290 ENDPROC
+300 PROC biggertest(a, b, c) CLOSED
+310   PRINT "a=", a, " b=", b, " c=", c
+320 ENDPROC
+400 PROC stringtest(a$) CLOSED
+410   PRINT "a$=", a$
+420 ENDPROC
+500 PROC recurse(count, max) CLOSED
+510   PRINT "count=", count
+520   IF count = max THEN 
+530     RETURN
+540   ELSE
+550     recurse(count + 1, max)
+560   ENDIF
+570 ENDPROC
+600 PROC setvalue(REF var, value) CLOSED
+610   PRINT "1 var=", var, " value=", value
+620   var := value
+630   PRINT "2 var=", var, " value=", value
+640 ENDPROC
+700 PROC setvalue2(REF var, value) CLOSED
+710   PRINT "1.1 var=", var, " value=", value
+720   setvalue(var, value)
+730   PRINT "2.1 var=", var, " value=", value
+740 ENDPROC

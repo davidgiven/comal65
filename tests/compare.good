@@ -1,0 +1,124 @@
+1< 2 = 1
+1<=2 = 1
+1= 2 = 0
+1<>2 = 1
+1> 2 = 0
+1>=2 = 0
+
+2< 2 = 0
+2<=2 = 1
+2= 2 = 1
+2<>2 = 0
+2> 2 = 0
+2>=2 = 1
+
+2< 1 = 0
+2<=1 = 0
+2= 1 = 0
+2<>1 = 1
+2> 1 = 1
+2>=1 = 1
+
+a< b = 1
+a<=b = 1
+a= b = 0
+a<>b = 1
+a> b = 0
+a>=b = 0
+
+b< b = 0
+b<=b = 1
+b= b = 1
+b<>b = 0
+b> b = 0
+b>=b = 1
+
+b< a = 0
+b<=a = 0
+b= a = 0
+b<>a = 1
+b> a = 1
+b>=a = 1
+
+a< aa = 1
+a<=aa = 1
+a= aa = 0
+a<>aa = 1
+a> aa = 0
+a>=aa = 0
+
+aa< aa = 0
+aa<=aa = 1
+aa= aa = 1
+aa<>aa = 0
+aa> aa = 0
+aa>=aa = 1
+
+aa< a = 0
+aa<=a = 0
+aa= a = 0
+aa<>a = 1
+aa> a = 1
+aa>=a = 1
+10 PRINT "1< 2 = ", 1 < 2
+20 PRINT "1<=2 = ", 1 <= 2
+30 PRINT "1= 2 = ", 1 = 2
+35 PRINT "1<>2 = ", 1 <> 2
+40 PRINT "1> 2 = ", 1 > 2
+50 PRINT "1>=2 = ", 1 >= 2
+55 PRINT
+60 PRINT "2< 2 = ", 2 < 2
+70 PRINT "2<=2 = ", 2 <= 2
+80 PRINT "2= 2 = ", 2 = 2
+85 PRINT "2<>2 = ", 2 <> 2
+90 PRINT "2> 2 = ", 2 > 2
+100 PRINT "2>=2 = ", 2 >= 2
+105 PRINT
+110 PRINT "2< 1 = ", 2 < 1
+120 PRINT "2<=1 = ", 2 <= 1
+130 PRINT "2= 1 = ", 2 = 1
+135 PRINT "2<>1 = ", 2 <> 1
+140 PRINT "2> 1 = ", 2 > 1
+150 PRINT "2>=1 = ", 2 >= 1
+160 PRINT
+200 PRINT "a< b = ", "a" < "b"
+210 PRINT "a<=b = ", "a" <= "b"
+220 PRINT "a= b = ", "a" = "b"
+225 PRINT "a<>b = ", "a" <> "b"
+230 PRINT "a> b = ", "a" > "b"
+240 PRINT "a>=b = ", "a" >= "b"
+250 PRINT
+260 PRINT "b< b = ", "b" < "b"
+270 PRINT "b<=b = ", "b" <= "b"
+280 PRINT "b= b = ", "b" = "b"
+285 PRINT "b<>b = ", "b" <> "b"
+290 PRINT "b> b = ", "b" > "b"
+300 PRINT "b>=b = ", "b" >= "b"
+310 PRINT
+320 PRINT "b< a = ", "b" < "a"
+330 PRINT "b<=a = ", "b" <= "a"
+340 PRINT "b= a = ", "b" = "a"
+345 PRINT "b<>a = ", "b" <> "a"
+350 PRINT "b> a = ", "b" > "a"
+360 PRINT "b>=a = ", "b" >= "a"
+400 PRINT
+410 PRINT "a< aa = ", "a" < "aa"
+420 PRINT "a<=aa = ", "a" <= "aa"
+430 PRINT "a= aa = ", "a" = "aa"
+435 PRINT "a<>aa = ", "a" <> "aa"
+440 PRINT "a> aa = ", "a" > "aa"
+450 PRINT "a>=aa = ", "a" >= "aa"
+460 PRINT
+470 PRINT "aa< aa = ", "aa" < "aa"
+480 PRINT "aa<=aa = ", "aa" <= "aa"
+490 PRINT "aa= aa = ", "aa" = "aa"
+495 PRINT "aa<>aa = ", "aa" <> "aa"
+500 PRINT "aa> aa = ", "aa" > "aa"
+510 PRINT "aa>=aa = ", "aa" >= "aa"
+520 PRINT
+530 PRINT "aa< a = ", "aa" < "a"
+540 PRINT "aa<=a = ", "aa" <= "a"
+550 PRINT "aa= a = ", "aa" = "a"
+555 PRINT "aa<>a = ", "aa" <> "a"
+560 PRINT "aa> a = ", "aa" > "a"
+570 PRINT "aa>=a = ", "aa" >= "a"

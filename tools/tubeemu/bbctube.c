@@ -247,7 +247,7 @@ static int stop_insn(M6502* cpu, uint16_t address, uint8_t data)
 
 int main(int argc, char* const argv[])
 {
-	uint16_t load_address = 0x0E00;
+	uint16_t load_address = 0x0400;
 	uint16_t exec_address = load_address;
 
 	memset(ram, 0x55, sizeof(ram));

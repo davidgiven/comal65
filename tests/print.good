@@ -1,0 +1,17 @@
+1
+-1
+99
+-99
+text
+12
+12
+line1line2
+10 PRINT 1
+20 PRINT -1
+30 PRINT 99
+40 PRINT -99
+50 PRINT "text"
+60 PRINT 1, 2
+70 PRINT "1", "2"
+80 PRINT "line1",
+90 PRINT "line2"

@@ -1,0 +1,68 @@
+9end
+10stop
+20bye
+40repeat
+50until false
+60while true
+70endwhile
+75while true do print
+80for i:=1 to 10 step 1 do print
+90for i=1 to 10 print
+100endfor
+110next
+120if true
+130else
+140endif
+150elif true
+160if true then print
+170a=1
+180a:=1
+190a=1; b=2; c=3
+200print
+210print 1
+220print 1,2,3
+230print 1,2,3,
+240print 1;2;3;
+250a$=a$(1:3)
+260a$=a$(1)
+270a=a+b-c*d/e mod f
+280a=a=b<>c<=d<e>=f>g
+290print (a+b)
+291print -a
+300print not(a)
+310print sgn(a)
+320print len(a)
+330print str$(a)
+331print rnd()
+332print rnd(a)
+333print rnd(a, b)
+340print free
+350print true
+360print false
+370print 9999
+375print -9999
+380print -(9999)
+390print "literal"
+410proc noparameters2()
+420proc oneparameter(a)
+430proc twoparameter(a, b)
+431proc refparameter(a, ref b, c)
+432proc stringparameter(a$, ref b$)
+433proc closedproc() closed
+450noparameters()
+460oneparameter(1)
+470twoparameter(1, 2)
+480endproc
+490return
+510func refparameter(a, ref b, c)
+520func stringparameter(a$, ref b$)
+521func closedfunc() closed
+530a=noparameters()
+540a=refparameter(a, b, c)
+550a$=stringparameter(a$, b$)
+560endfunc
+570return 1234
+
+list
+bye
+

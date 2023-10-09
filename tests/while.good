@@ -1,0 +1,17 @@
+2
+3
+4
+5
+6
+7
+8
+9
+10
+0
+10 i := 1
+20 WHILE i <> 10 DO 
+30   i := i + 1
+40   PRINT i
+50 ENDWHILE
+60 WHILE i <> 0 DO i := i - 1
+70 PRINT i
