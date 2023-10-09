@@ -1,5 +1,9 @@
 LLVM ?= /opt/bin/
 CC = cc
+CXX = c++
+CFLAGS = -Og -g
+CXXFLAGS = -Og -g
+LDFLAGS =
 CLANGFLAGS =
 
 OBJDIR = .obj
@@ -12,7 +16,7 @@ FILES = \
 
 all: bin/tubeemu bin/bbctube.ssd
 
-bin/tubeemu: $(OBJDIR)/tools/tubeemu/bbctube
+bin/tubeemu: $(OBJDIR)/tools/tubeemu/tubeemu
 	@mkdir -p $(dir $@)
 	cp $< $@
 
@@ -25,11 +29,15 @@ bin/bbctube.ssd: $(OBJDIR)/bbctube.bin $(OBJDIR)/tools/mkdfs
 
 $(OBJDIR)/%.o: %.c
 	@mkdir -p $(dir $@)
-	$(CC) -c -o $@ $< -I.
+	$(CC) $(CFLAGS) -c -o $@ $< -I.
+
+$(OBJDIR)/%.o: %.cc
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) -c -o $@ $< -I.
 
 $(OBJDIR)/%: $(OBJDIR)/%.o
 	@mkdir -p $(dir $@)
-	$(CC) -o $@ $^
+	$(CXX) -g -o $@ $^ $(LDFLAGS)
 
 $(OBJDIR)/%.bin: $(OBJDIR)/src/%.o $(COMMON) src/%.ld 
 	@mkdir -p $(dir $@)
@@ -45,7 +53,13 @@ $(OBJDIR)/%.o: %.s
 
 $(OBJDIR)/src/bbctube.o: CLANGFLAGS += -mcpu=mos65c02
 
-$(OBJDIR)/tools/tubeemu/bbctube: $(OBJDIR)/third_party/lib6502/lib6502.o
+$(OBJDIR)/tools/tubeemu/tubeemu: LDFLAGS += -lreadline -lelf
+$(OBJDIR)/tools/tubeemu/tubeemu: \
+	$(OBJDIR)/third_party/lib6502/lib6502.o \
+	$(OBJDIR)/tools/tubeemu/mos.o \
+	$(OBJDIR)/tools/tubeemu/emulator.o \
+
+$(OBJDIR)/tools/tubeemu/%.o: tools/tubeemu/globals.h
 
 include tests/build.mk
 
