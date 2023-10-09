@@ -167,6 +167,7 @@ zproc platform_startup_hook
 
     lda bufferend
     zif_ne
+        jsr push_i0
         ldx #v0
         jsr create_string
         jsr exec_enter

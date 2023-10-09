@@ -9,9 +9,9 @@ BASIC to the 6502.
 
 It's about half complete. The core language is implemented, although with
 integer maths only, and missing some constructs (CASE...WHEN...ENDCASE is the
-major one). The only file support is `ENTER` and `LIST <string>` for reading and
-writing programs as text files. (I haven't done `LOAD` or `SAVE` yet as the
-bytecode format isn't complete.) Also you can't enter comments!
+major one). The only file support is `ENTER <string>` and `LIST <string>` for
+reading and writing programs as text files. (I haven't done `LOAD` or `SAVE` yet
+as the bytecode format isn't complete.) Also you can't enter comments!
 
 Programs are compiled into bytecode on the fly, and decompiled on the fly when
 you list them.
