@@ -32,14 +32,14 @@ Where?
 
 It's [open source on GitHub!](https://github.com/davidgiven/comal65)
 
+And [there are precompiled
+binaries](https://github.com/davidgiven/comal65/releases/tag/dev).
 
 How?
 ----
 
-You will need the [llvm-mos](https://llvm-mos.org) toolchain. CP/M-65 support
-is available out of the box. Once installed, you should just be able to run the
-Makefile and you'll get bootable disk images for the Commodore 64 (with 1541
-drive) and BBC Micro (producing a 200kB SSSD DFS disk):
+You will need the [llvm-mos](https://llvm-mos.org) toolchain.  Once installed,
+you should just be able to run the Makefile.
 
     make LLVM=<your llvm-mos bin directory here>/
 
