@@ -36,7 +36,7 @@ jobs:
       name: install llvm-mos
       run: |
         mkdir -p llvm-mos-sdk/build
-        (cd llvm-mos-sdk/build && cmake -G "Make" -DCMAKE_INSTALL_PREFIX=$HOME/llvm-mos ..)
+        (cd llvm-mos-sdk/build && cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=$HOME/llvm-mos ..)
         (cd llvm-mos-sdk/build && make install)
 
     - name: make
