@@ -1,7 +1,5 @@
 .include "src/zif.inc"
-
-.extern p0
-.zeropage p0
+.include "src/_globals.inc"
 
 zproc _start
     lda #<brk_handler

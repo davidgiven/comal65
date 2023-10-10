@@ -26,7 +26,11 @@ SECTIONS {
 
 	.text : { *(.text .text.*) } >ram
 	.data : { *(.data .data.* .rodata .rodata.*) } > ram
-	.noinit (NOLOAD) : { *(.noinit .noinit.*) } >ram
+	.noinit (NOLOAD) : { *(.noinit .noinit.* .bss .bss.* COMMON) } >ram
+        
+    /* Must be last --- this is where the program data starts. */
+
+    heapbase = .;
 }
 
 OUTPUT_FORMAT {

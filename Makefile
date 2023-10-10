@@ -9,7 +9,10 @@ CLANGFLAGS =
 OBJDIR = .obj
 
 COMMON = \
-	$(OBJDIR)/src/_interpreter.o
+	$(OBJDIR)/src/_interpreter.o \
+	$(OBJDIR)/src/_buffer.o \
+	$(OBJDIR)/src/_maths.o \
+	$(OBJDIR)/src/_parser.o \
 
 FILES = \
 	examples/hilo.cml
@@ -47,7 +50,7 @@ $(OBJDIR)/%.bin: $(OBJDIR)/src/%.o $(COMMON) src/%.ld
 		-o $@ \
 		$(filter %.o, $^)
 
-$(OBJDIR)/%.o: %.s
+$(OBJDIR)/%.o: %.s src/zif.inc src/_globals.inc
 	@mkdir -p $(dir $@)
 	$(LLVM)mos-cpm65-clang -g $(CLANGFLAGS) -c -o $@ $<
 
@@ -62,6 +65,8 @@ $(OBJDIR)/tools/tubeemu/tubeemu: \
 $(OBJDIR)/tools/tubeemu/%.o: tools/tubeemu/globals.h
 
 include tests/build.mk
+
+.SECONDARY:
 
 clean:
 	rm -rf $(OBJDIR) bin
