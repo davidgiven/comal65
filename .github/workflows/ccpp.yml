@@ -45,4 +45,5 @@ jobs:
         name: ${{ github.event.repository.name }}.${{ github.sha }}
         path: |
           comal65/bin/bbctube.ssd
+          comal65/bin/cpm65.com
 

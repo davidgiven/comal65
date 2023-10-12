@@ -18,7 +18,7 @@ COMMON = \
 FILES = \
 	examples/hilo.cml
 
-all: tests bin/tubeemu bin/bbctube.ssd
+all: tests bin/tubeemu bin/bbctube.ssd bin/cpm65.com
 
 bin/tubeemu: $(OBJDIR)/tools/tubeemu/tubeemu
 	@mkdir -p $(dir $@)
@@ -31,6 +31,10 @@ bin/bbctube.ssd: $(OBJDIR)/bbctube.bin $(OBJDIR)/tools/mkdfs
 		-f $(OBJDIR)/bbctube.bin -n \!boot -l 0x400 -e 0x400 -B 2 \
 		$(patsubst %, -f %, $(FILES))
 
+bin/cpm65.com: $(OBJDIR)/cpm65.com
+	@mkdir -p $(dir $@)
+	cp $< $@
+
 $(OBJDIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c -o $@ $< -I.
@@ -42,6 +46,10 @@ $(OBJDIR)/%.o: %.cc
 $(OBJDIR)/%: $(OBJDIR)/%.o
 	@mkdir -p $(dir $@)
 	$(CXX) -g -o $@ $^ $(LDFLAGS)
+
+$(OBJDIR)/cpm65.com: $(OBJDIR)/src/cpm65.o $(COMMON)
+	@mkdir -p $(dir $@)
+	$(LLVM)mos-cpm65-clang -g $(CLANGFLAGS) -Wl,--defsym=heapbase=__heap_start -o $@ $^
 
 $(OBJDIR)/%.bin: $(OBJDIR)/src/%.o $(COMMON) src/%.ld 
 	@mkdir -p $(dir $@)
