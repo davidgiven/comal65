@@ -13,6 +13,7 @@ COMMON = \
 	$(OBJDIR)/src/_buffer.o \
 	$(OBJDIR)/src/_maths.o \
 	$(OBJDIR)/src/_parser.o \
+	$(OBJDIR)/src/_vars.o \
 
 FILES = \
 	examples/hilo.cml

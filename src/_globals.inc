@@ -228,3 +228,21 @@ LINE_NUMBER     = 1
 LINE_INDENT     = 3
 LINE_DATA       = 4
 
+; Useful macros.
+
+.macro copystruct n, src, dest
+    ldx #(\n)-1
+    zrepeat
+        lda \src, x
+        sta \dest, x
+        dex
+    zuntil_mi
+.endm
+
+.macro copy16 src, dest
+    lda \src+0
+    sta \dest+0
+    lda \src+1
+    sta \dest+1
+.endm
+

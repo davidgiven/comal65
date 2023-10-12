@@ -28,22 +28,6 @@ DEBUG_TRACE_LINES = 0
 ; If the C flag is 0, then A (unsigned) < NUM (unsigned) and BCC will branch
 ; If the C flag is 1, then A (unsigned) >= NUM (unsigned) and BCS will branch
 
-.macro copystruct n, src, dest
-    ldx #(\n)-1
-    zrepeat
-        lda \src, x
-        sta \dest, x
-        dex
-    zuntil_mi
-.endm
-
-.macro copy16 src, dest
-    lda \src+0
-    sta \dest+0
-    lda \src+1
-    sta \dest+1
-.endm
-
 .section .zp, "zax", @nobits
 
 enterfd:  .byte 0
@@ -53,21 +37,6 @@ heapptr:   .word 0
 stackptr:  .word 0
 progbase:  .word 0
 progtop:   .word 0
-
-p0:        .word 0
-p1:        .word 0
-p2:        .word 0
-p3:        .word 0
-p4:        .word 0
-
-v0:        .byte 0
-i0:        .word 0, 0 ; also, TOS when executing
-
-v1:        .byte 0
-i1:        .word 0, 0
-
-v2:        .byte 0
-i2:        .word 0, 0
 
 bytecodeptr:        .byte 0 ; used by parser and lister and editor
 opstackptr:         .byte 0 ; operator stack pointer
