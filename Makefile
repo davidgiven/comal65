@@ -44,7 +44,7 @@ $(OBJDIR)/%: $(OBJDIR)/%.o
 
 $(OBJDIR)/%.bin: $(OBJDIR)/src/%.o $(COMMON) src/%.ld 
 	@mkdir -p $(dir $@)
-	$(LD65)ld.lld \
+	$(LLVM)ld.lld \
 		-Map $(OBJDIR)/$*.map \
 		-T src/$*.ld \
 		-o $@ \
