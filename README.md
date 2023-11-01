@@ -52,7 +52,15 @@ you should just be able to run the Makefile.
   supplied text file.
   
   - Do CTRL+BREAK to quit.
-  
+
+### CP/M-65 notes
+
+  - To run, copy the `comal65.com` file onto your system and run it.
+
+  - You can also do `comal65 <filename>` to start the interpreter and load the
+    supplied text file.
+
+  - Do `BYE` to quit.
 
 Who?
 ----
