@@ -1,19 +1,19 @@
 10 REPEAT
-20 target := RND(100)
-30 tries := 0
-40 PRINT "Guess my number!"
-50 REPEAT
-60 tries := tries + 1
-70 INPUT "What is your guess? ": guess
-80 IF guess < target THEN 
-90 PRINT "Too low!"
-100 ELIF guess > target THEN 
-110 PRINT "Too high!"
-120 ENDIF
-130 UNTIL guess = target
-140 PRINT "You got it in ", tries, " go",
-150 IF tries <> 1 THEN PRINT "es",
-160 PRINT "!"
-170 INPUT "Another go? (y/n): ": yn$
+20   target := RND(100)
+30   tries := 0
+40   PRINT "Guess my number!"
+50   REPEAT
+60     tries := tries + 1
+70     INPUT "What is your guess? ": guess
+80     IF guess < target THEN 
+90       PRINT "Too low!"
+100     ELIF guess > target THEN 
+110       PRINT "Too high!"
+120     ENDIF
+130   UNTIL guess = target
+140   PRINT "You got it in ", tries, " go",
+150   IF tries <> 1 THEN PRINT "es",
+160   PRINT "!"
+170   INPUT "Another go? (y/n): ": yn$
 180 UNTIL yn$ <> "y"
 
