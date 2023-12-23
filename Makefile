@@ -1,4 +1,4 @@
-LLVM ?= /opt/bin/
+LLVM ?= /opt/llvm-mos/bin/
 CC = cc
 CXX = c++
 CFLAGS = -Og -g

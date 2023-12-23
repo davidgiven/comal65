@@ -1,0 +1,5 @@
+This is a massively hacked up copy of the floating point routines from
+dschmenk's VM02, sourced from
+https://github.com/dschmenk/VM02/blob/master/src/ops.s.
+
+GPLv2.
