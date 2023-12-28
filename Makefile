@@ -13,6 +13,7 @@ COMMON = \
 	$(OBJDIR)/src/_buffer.o \
 	$(OBJDIR)/src/_maths.o \
 	$(OBJDIR)/src/_parser.o \
+	$(OBJDIR)/src/_utils.o \
 	$(OBJDIR)/src/_vars.o \
 
 FILES = \
@@ -60,6 +61,10 @@ $(OBJDIR)/%.bin: $(OBJDIR)/src/%.o $(COMMON) src/%.ld
 		$(filter %.o, $^)
 
 $(OBJDIR)/%.o: %.s src/zif.inc src/_globals.inc
+	@mkdir -p $(dir $@)
+	$(LLVM)mos-cpm65-clang -g $(CLANGFLAGS) -c -o $@ $<
+
+$(OBJDIR)/%.o: %.S src/zif.inc src/_globals.inc
 	@mkdir -p $(dir $@)
 	$(LLVM)mos-cpm65-clang -g $(CLANGFLAGS) -c -o $@ $<
 

@@ -7,8 +7,10 @@
 
 .global v0, v1, v2
 .global i0, i1, i2
+.global f0, f1, f2
 .zeropage v0, v1, v2
 .zeropage i0, i1, i2
+.zeropage f0, f1, f2
 
 ; The 256-byte general purpose text buffer.
 

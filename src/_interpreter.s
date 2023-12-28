@@ -401,43 +401,6 @@ zproc clear
     rts
 zendproc
 
-; --- Debugging routines ----------------------------------------------------
-
-.if DEBUG_TRACE_LINES || DEBUG_DUMP_BYTECODE
-
-; Prints a 16-bit hex number in XA.
-zproc print_hex16_number
-    pha
-    txa
-    jsr print_hex8_number
-    pla
-    jmp print_hex8_number
-zendproc
-
-; Prints an 8-bit hex number in A.
-zproc print_hex8_number
-    pha
-    lsr a
-    lsr a
-    lsr a
-    lsr a
-    jsr print_hex4_number
-    pla
-print_hex4_number:
-    and #$0f
-    ora #'0'
-    cmp #'9'+1
-    zif_cs
-        adc #6
-    zendif
-    pha
-    jsr platform_putchar
-    pla
-    rts
-zendproc
-
-.endif
-
 ; --- Output ----------------------------------------------------------------
 
 ; As for print_string, but puts a space after it.
@@ -1959,6 +1922,8 @@ zproc exec_neg
     ldx #v0
     jsr coerce_to_integer
 
+.global raw_neg_i0
+raw_neg_i0:
     ldx #-4 & 0xff
     sec
     zrepeat
