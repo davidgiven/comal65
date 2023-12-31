@@ -69,4 +69,6 @@ data_start:
     number 0x00, 0x00400000, 0x80 ; 1 >> 1
     number 0x00, 0x00404040, 0x80 ; 1 and a bit >> 1
     number 0x00, 0x00400000, 0x81 ; 2 >> 1
+
+    number 0x00, 0x00000000, 96   ; 0 but all mantissa bits zero
 data_end:

@@ -21,6 +21,8 @@ MAN2 = 3
 MAN3 = 4
 EXP  = 5
 
+BIAS = 0x7f
+
 ; On entry: X points at V value
 zproc funpack
 	lda MAN2, x		; high byte of mantissa
@@ -66,6 +68,7 @@ zproc fnormalise
     normalise_to_zero:
         lda #0
         sta SGN, x
+        sta EXP, x
         sta MAN0, x
         sta MAN1, x
         sta MAN3, x
@@ -80,12 +83,15 @@ zproc fnormalise
         ; the mantissa is in range. This can loop a maximum of 24 times.
         ; TODO: optimise shifts of eight or more.
 
+        lda MAN0, x
+        ora MAN1, x
+        ora MAN2, x
+        ora MAN3, x
+        beq normalise_to_zero
+        
         lda MAN2, x
         zif_pl
             zrepeat
-                lda MAN2, x
-                zbreakif_mi
-
                 dec EXP, x
                 beq precision_lost
                 asl MAN0, x
@@ -94,23 +100,24 @@ zproc fnormalise
             zuntil_mi
             sta MAN2, x
         zendif
-    zelse
-        ; Normalise right, reducing the value and increasing the exponent until
-        ; the mantissa is in range. This can loop a maximum of eight times.
-
-        ; A = MAN3 on entry
-        zrepeat
-            inc EXP, x
-            beq infinity
-            lsr a
-            ror MAN2, x
-            ror MAN1, x
-            ror MAN0, x
-            
-            tay             ; set flags
-        zuntil_eq
-        sta MAN3, x
+        rts
     zendif
+
+    ; Normalise right, reducing the value and increasing the exponent until
+    ; the mantissa is in range. This can loop a maximum of eight times.
+
+    ; A = MAN3 on entry
+    zrepeat
+        inc EXP, x
+        beq infinity
+        lsr a
+        ror MAN2, x
+        ror MAN1, x
+        ror MAN0, x
+        
+        tay             ; set flags
+    zuntil_eq
+    sta MAN3, x
     rts
 
 precision_lost:
@@ -119,6 +126,37 @@ infinity:
     rts
 zendproc
         
+; On entry: X points at V value
+zproc ffromint
+    lda #0
+    sta SGN, x          ; sign defaults to positive
+
+    lda MAN3, x
+    zif_mi
+        ; The number is negative, so invert it.
+
+        sec
+        lda #0
+        sbc MAN0, x
+        sta MAN0, x
+        lda #0
+        sbc MAN1, x
+        sta MAN1, x
+        lda #0
+        sbc MAN2, x
+        sta MAN2, x
+
+        lda #0x80       ; set sign to negative
+        sta SGN, x
+    zendif
+
+    lda #BIAS + 23
+    sta EXP, x
+    lda #0
+    sta MAN3, x
+    jsr fnormalise
+    jmp fpack
+zendproc
 
 #if 0
 FNEG:	TSX
@@ -686,38 +724,6 @@ zproc f2i
 		sta	fpman3			; stores zero
 		beq	f2ichkneg		; always taken
 	zendif
-zendproc
-
-zproc i2f
-	lda i0+0
-	sta fpman0
-	lda i0+1
-	sta fpman1
-	lda i0+2
-	sta fpman2
-	
-	lda i0+3			; high byte ignored except for sign
-	and #0x80
-	
-#if 0
-,	PLA
-	STA	fpman0
-	PLA
-	STA	fpman1
-	PLA
-	STA	fpman2
-	PLA
-	STA	fpman3
-	AND	#0x80
-	STA	FPSGN
-	BPL	:+
-	LDX	#fpman0
-	JSR	NEGINT
-:	LDA	#0x7F+23
-	STA	fpexp
-	LDA	fpman3
-	JMP	fpnorm
-#endif
 zendproc
 #endif
 
