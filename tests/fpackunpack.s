@@ -1,5 +1,6 @@
 .include "src/zif.inc"
 .include "src/_globals.inc"
+.include "tests/_futils.inc"
 
 zproc _start
     zloop
@@ -9,22 +10,8 @@ zproc _start
         
         ; Print source.
 
-        lda data_start+0, x
-        sta i0+0
-        jsr print_hex8_number
-
-        lda data_start+1, x
-        sta i0+1
-        jsr print_hex8_number
-
-        lda data_start+2, x
-        sta i0+2
-        jsr print_hex8_number
-        
-        lda data_start+3, x
-        sta i0+3
-        jsr print_hex8_number
-
+        jsr load_value_into_i0
+        jsr print_i0
         jsr space
 
         ; Run code.
@@ -34,29 +21,7 @@ zproc _start
 
         ; Print unpacked version.
 
-        lda i0+0
-        jsr print_hex8_number
-        jsr space
-
-        lda i0+1
-        jsr print_hex8_number
-        jsr space
-        
-        lda i0+2
-        jsr print_hex8_number
-        jsr space
-        
-        lda i0+3
-        jsr print_hex8_number
-        jsr space
-        
-        lda f0
-        jsr print_hex8_number
-        jsr space
-
-        lda v0
-        jsr print_hex8_number
-        jsr space
+        jsr print_v0
         
         ; Run code.
 
@@ -65,16 +30,7 @@ zproc _start
 
         ; Print packed version again.
 
-        jsr print_hex8_number
-
-        lda i0+1
-        jsr print_hex8_number
-
-        lda i0+2
-        jsr print_hex8_number
-        
-        lda i0+3
-        jsr print_hex8_number
+        jsr print_i0
 
         ; Advance.
         
@@ -89,11 +45,6 @@ zproc _start
     zendloop 
 
     rts
-zendproc
-
-zproc space
-    lda #' '
-    jmp platform_putchar
 zendproc
 
 item_counter:
